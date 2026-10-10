@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="BME projects by Hafiz Rahman: a beacon-homing delivery robot built on ESP32, and an ECG heart-rate analyzer in Python.">
+<meta name="description" content="Hafiz Rahman — BME junior at CUNY. Cell-density research on IL-6 signaling, a beacon-homing delivery robot on ESP32, and an ECG heart-rate analyzer in Python.">
 <meta property="og:title" content="Hafiz Rahman — Build Log">
-<meta property="og:description" content="Embedded hardware and biosignal processing projects.">
+<meta property="og:description" content="Biomedical research, embedded hardware, and signal processing projects.">
 <meta property="og:type" content="website">
 <style>
 :root{color-scheme:light; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -159,6 +159,15 @@ table.wiring tbody tr:last-child th,table.wiring tbody tr:last-child td{
 .pair figure{margin:0; min-width:0}
 .pair img{width:100%; height:auto; aspect-ratio:4/3; object-fit:cover}
 
+/* ---------- status pill ---------- */
+.status{
+  display:inline-block; font-family:var(--mono); font-size:.66rem;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--signal);
+  border:1px solid var(--signal); border-radius:2px;
+  padding:.18rem .5rem; margin-left:.6rem; vertical-align:.18em;
+  white-space:nowrap;
+}
+
 /* ---------- in-progress ---------- */
 .wip{padding-block:3.5rem 1rem; border-top:2px solid var(--fg)}
 .wip-head{
@@ -195,14 +204,104 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
   <header class="mast">
     <p class="role">Biomedical Engineering &middot; CUNY</p>
     <h1>Hafiz Rahman</h1>
-    <p class="lede">I'm a BME junior at CUNY. These are two projects I built and
-    debugged myself, one embedded hardware and one signal processing. Both have the
-    code and the actual results, not just a description.</p>
+    <p class="lede">I'm a biomedical engineering junior at CUNY, graduating in 2028.
+    Right now I'm in Dr. Pamela del Valle's lab looking at how cell density affects
+    IL-6 signaling in a melanoma line. Outside the lab I build embedded hardware and
+    write signal processing code. Everything here is work I did and debugged myself,
+    with the code and the actual results included.</p>
+    <p class="lede" style="font-size:.95rem; color:var(--muted); margin-bottom:1.75rem">
+    Looking for a summer R&amp;D internship in medical devices. This page is a work in
+    progress &mdash; I add projects as I finish them.</p>
     <ul class="contact">
       <li><span>Email</span><code>md.rahman555@login.cuny.edu</code></li>
       <li><span>GitHub</span><a href="https://github.com/hafizcoding">github.com/hafizcoding</a></li>
     </ul>
   </header>
+
+  <!-- ===== Current research ===== -->
+  <article class="entry">
+    <p class="eyebrow">Cell culture &middot; Protein assays</p>
+    <h2>How cell density changes IL-6 signaling<span class="status">Ongoing</span></h2>
+
+    <div class="cols">
+      <div class="prose">
+        <p>I've been working in Dr. Pamela del Valle's lab since this past summer on a
+        question that sounds simple: <strong>do crowded cancer cells make different
+        things than spread-out ones?</strong> Specifically we're looking at
+        interleukin-6 and its receptor in a mouse melanoma line (YUMM1.7). IL-6
+        signaling is tied to tumor growth and spread, and there isn't much published on
+        how confluency alone affects it in these cells.</p>
+
+        <p>The reason I think this matters: in tissue engineering we design environments
+        to mimic what happens in the body. If something as basic as how crowded a dish
+        is changes what the cells produce, that changes how you read every model built
+        on it. IL-6 is also a biomarker doctors track in cancer and inflammation, so
+        it's not only an in vitro question.</p>
+
+        <p>We built the project from scratch. There was no shelf of ready-made reagents
+        &mdash; we made our own buffers from recipes, including the lysis and running
+        buffers for Westerns, which meant doing the calculations, weighing everything
+        out, and checking pH before we could run anything. Slower than opening a kit,
+        but I know what's in every tube and why.</p>
+
+        <p>It also didn't start the way we planned. The melanoma cells took weeks longer
+        to arrive than expected, so we practiced on HEK 293T cells borrowed from another
+        lab. That turned out to help &mdash; I got the basics down before they counted.</p>
+
+        <p>The thing I learned the most from was a bad standard curve.
+        <strong>My first Bradford curve wasn't a straight line.</strong> Working out why
+        taught me more than a clean one would have, and it's the same idea as
+        calibrating any instrument: if the calibration is off, every number after it is
+        off too. I spent similar time figuring out which reducing agent to use in our
+        sample buffer for probing IL-6R, which showed me how many small decisions sit
+        behind one experiment.</p>
+
+        <p>No results yet. We're running through the end of the fall semester, and the
+        next step is comparing IL-6 secretion and IL-6R expression at 60% versus 100%
+        confluency by ELISA and Western blot. I'll put the data here when we have it.</p>
+      </div>
+
+      <div class="specs">
+        <dl>
+          <dt>Lab</dt>
+          <dd>Dr. Pamela del Valle</dd>
+          <dt>Question</dt>
+          <dd>Does confluency change<br>IL-6 / IL-6R in vitro?</dd>
+          <dt>Cells</dt>
+          <dd>YUMM1.7 mouse melanoma<br>HEK 293T for practice</dd>
+          <dt>Techniques</dt>
+          <dd>Sterile cell culture,<br>passaging, lysis,<br>Bradford assay,<br>Western blot prep</dd>
+          <dt>Reagents</dt>
+          <dd>Buffers made from<br>recipe, not kits</dd>
+          <dt>Next</dt>
+          <dd>ELISA + Western at<br>60% vs 100%</dd>
+          <dt>Status</dt>
+          <dd>Running through<br>fall semester</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="pair" style="margin-top:2.5rem">
+      <figure>
+        <img src="img/lab_plan.jpg" width="1409" height="1600"
+             alt="A lab whiteboard showing the experimental design: two dishes labelled
+                  60 percent and about 100 percent confluency, an arrow to a tube with
+                  lysis buffer, and a week schedule reading Monday plate, Tuesday change
+                  media, Wednesday passage at 1 to 20 for 60 percent and 1 to 10 for 100
+                  percent, Thursday lyse, Bradford, sample prep.">
+        <figcaption>The plan on the board. Two confluency conditions, and the passage
+        ratios that get us there &mdash; 1:20 for ~60%, 1:10 for ~100% &mdash; then lyse
+        and run a Bradford before prepping samples.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/lab_bsc.jpg" width="1500" height="1138"
+             alt="Working in a biosafety cabinet in a lab coat and gloves, pipetting
+                  media into culture dishes.">
+        <figcaption>Changing media in the biosafety cabinet. Most of the summer was
+        learning to do this part without contaminating anything.</figcaption>
+      </figure>
+    </div>
+  </article>
 
   <!-- ===== 1. BLACKBIRD delivery robot ===== -->
   <article class="entry">
