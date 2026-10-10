@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Biomedical engineering projects by Hafiz Rahman: an autonomous beacon-homing delivery robot, an ECG heart-rate analyzer, and a 3D-printed prosthetic fingertip.">
+<meta name="description" content="BME projects by Hafiz Rahman: a beacon-homing delivery robot built on ESP32, and an ECG heart-rate analyzer in Python.">
 <meta property="og:title" content="Hafiz Rahman — Build Log">
-<meta property="og:description" content="Embedded systems, biosignal processing, and digital fabrication projects.">
+<meta property="og:description" content="Embedded hardware and biosignal processing projects.">
 <meta property="og:type" content="website">
 <style>
 :root{color-scheme:light; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -195,9 +195,9 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
   <header class="mast">
     <p class="role">Biomedical Engineering &middot; CUNY</p>
     <h1>Hafiz Rahman</h1>
-    <p class="lede">Undergraduate work across embedded systems, biosignal processing, and
-    digital fabrication. Each project below was designed, built, and debugged end to
-    end &mdash; CAD through firmware through the finished part.</p>
+    <p class="lede">I'm a BME junior at CUNY. These are two projects I built and
+    debugged myself, one embedded hardware and one signal processing. Both have the
+    code and the actual results, not just a description.</p>
     <ul class="contact">
       <li><span>Email</span><code>md.rahman555@login.cuny.edu</code></li>
       <li><span>GitHub</span><a href="https://github.com/hafizcoding">github.com/hafizcoding</a></li>
@@ -213,36 +213,37 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
       <img src="img/bot.jpg" width="1600" height="1232"
            alt="Four-wheeled robot on a blue 3D-printed chassis with an HC-SR04 ultrasonic
                 sensor mounted at the front, an ESP32 board, breadboard and 9V battery.">
-      <figcaption>Final platform. Chassis printed in PLA; sensor bracket and motor
-      mounts modelled around the component footprints.</figcaption>
+      <figcaption>The finished robot. I printed the chassis in PLA and sized the
+      sensor bracket and motor mounts around the parts I actually had.</figcaption>
     </figure>
 
     <div class="cols">
       <div class="prose">
-        <p>An untethered ground robot that <strong>navigates to a person rather than a
-        fixed route</strong>. A phone advertises itself over Bluetooth Low Energy as
-        <code>TARGET</code>; the robot scans for that name, reads the signal strength of
-        each advertisement, converts it to an estimated range, and drives toward it.
-        An ultrasonic sensor interrupts the approach whenever something comes within
-        15&nbsp;cm. On arrival a servo releases the payload.</p>
+        <p>I built this for the CIPASS summer engineering internship. It's a robot that
+        <strong>drives toward a person instead of following a set path</strong>. You put
+        your phone in BLE advertising mode with the name <code>TARGET</code>, and the
+        robot scans for it, reads how strong the signal is, estimates how far away that
+        puts you, and drives that way. If something gets within 15 cm an ultrasonic
+        sensor stops it and it goes around. Once it gets close enough, a servo opens a
+        hatch and drops whatever it's carrying.</p>
 
-        <p>Built for the CIPASS summer engineering program. It began as a three-person
-        project; both teammates withdrew during the first week, so I took on the
-        mechanical and programming roles alongside my own and carried the robot through
-        to the final demonstration &mdash; chassis CAD, circuit, and firmware.</p>
+        <p>I did the chassis in Onshape, wired and debugged the circuit, and wrote all
+        the firmware.</p>
 
-        <p>The first build ran on an Arduino Uno. Uno has no radio, so homing on a phone
-        meant <strong>moving the whole system to an ESP32</strong>, which has BLE on
-        die. That migration cost real time: upload and boot-mode faults, a USB-C adapter
-        that kept dropping the link, and one board lost outright to an autoreset fault.</p>
+        <p>I started on an Arduino Uno because that's what came in my kit. The problem
+        is the Uno has no radio at all, so there was no way to do the phone part.
+        I ended up <strong>switching the whole thing to an ESP32</strong>, which has
+        Bluetooth built in. That took longer than the actual project. I kept getting
+        upload and boot-mode errors, my USB-C adapter kept dropping out mid-upload, and
+        I eventually killed one of the boards.</p>
 
-        <p>Two hardware failures taught more than the rest of it. Four motors plus the
-        controller drawing from a single 9&nbsp;V block caused <strong>brownouts</strong>
-        &mdash; sluggish motors, parts running hot, resets mid-run &mdash; fixed by
-        giving the motor driver its own battery and feeding the controller separately.
-        And the ultrasonic sensor shorted after being wired to the 9&nbsp;V rail instead
-        of 3V3. Both faults came down to treating power as an afterthought, which it
-        isn't.</p>
+        <p>The two things that actually taught me something were both power problems.
+        Running four motors and the ESP32 off one 9 V battery caused
+        <strong>brownouts</strong> — the motors were slow, stuff got hot, and the board
+        would reset partway through a run. I fixed it by giving the motor driver its own
+        battery and powering the ESP32 separately. The other one was my fault: I wired
+        the ultrasonic sensor's VCC to the 9 V rail and shorted it. It runs on 3.3 V.
+        I replaced the sensor and moved the wire.</p>
       </div>
 
       <div class="specs">
@@ -264,6 +265,7 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
           <dt>Tools</dt>
           <dd>Onshape, C++/Arduino</dd>
         </dl>
+        <a class="repo" href="https://github.com/hafizcoding/delivery-bot">View repository &rarr;</a>
       </div>
     </div>
 
@@ -339,9 +341,9 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
           </g>
         </svg>
       </div>
-      <figcaption>Control loop as implemented. The servo is detached while the robot
-      drives and re-attached only on arrival, so it holds still instead of jittering
-      over rough ground.</figcaption>
+      <figcaption>How the firmware is structured. One thing I had to figure out: the
+      servo twitches the whole time it's attached, so I detach it while the robot is
+      driving and only re-attach it at the end to open the hatch.</figcaption>
     </figure>
 
     <!-- RSSI model chart -->
@@ -433,12 +435,12 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
           <div><span>Speed</span><b>160&ndash;255 PWM</b></div>
         </div>
       </div>
-      <figcaption>Range is inferred from signal strength through a log-distance
-      path-loss model, plotted here from the constants in the firmware. The first
-      arrival test demanded a stronger signal held three times longer; because RSSI
-      is noisy, it almost never fired. Relaxing it to five readings under 0.5&nbsp;m
-      made arrival reliable. Drive speed steps down over the same curve so the robot
-      decelerates as it closes.</figcaption>
+      <figcaption>This is the curve my firmware uses to turn signal strength into a
+      distance guess, plotted from the constants in my code. My first version wanted 15
+      readings in a row under 0.3 m before it would say it arrived. It basically never
+      triggered, because the signal jumps around by several dB between reads. Dropping
+      it to 5 readings under 0.5 m made it work every time. The robot also slows down as
+      the number gets smaller so it doesn't overshoot.</figcaption>
     </figure>
 
     <!-- process shot -->
@@ -448,16 +450,15 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
              alt="The robot's electronics on a black foam board prototype: an ELEGOO
                   Arduino Uno R3, an L298N motor driver, an HC-SR04 ultrasonic sensor,
                   four wheels on TT gear motors, and jumper wiring.">
-        <figcaption>Earlier milestone: the Arduino Uno build on foam board, before the
-        move to ESP32. Proving the circuit on a flat board first meant the printed
-        deck only had to be designed once.</figcaption>
+        <figcaption>The earlier Arduino Uno version on foam board. I wanted the circuit
+        working before I designed any geometry, so I only had to print the deck once.</figcaption>
       </figure>
       <figure>
         <img src="img/proto_cad.jpg" width="1419" height="770"
              alt="The chassis modelled in Onshape: a flat deck with two raised blocks
                   for the electronics and four L-shaped motor mounts underneath.">
-        <figcaption>Chassis part studio in Onshape. The deck carries the electronics;
-        the L-brackets underneath locate the four gear motors.</figcaption>
+        <figcaption>The chassis in Onshape. Flat deck for the electronics, and the
+        L-brackets underneath are where the four gear motors sit.</figcaption>
       </figure>
     </div>
   </article>
@@ -473,31 +474,32 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
                 showing baseline drift around minus 0.35 millivolts. Bottom: the same
                 signal after bandpass filtering, centred on zero, with thirteen detected
                 R-peaks marked in red and the heart rate given as 75.5 bpm.">
-      <figcaption>Program output. Raw signal above, bandpass-filtered signal below with
-      every detected R-peak marked. Note the baseline sitting near &minus;0.35&nbsp;mV
-      before filtering and centred on zero after.</figcaption>
+      <figcaption>What the script outputs. Raw signal on top, filtered signal on the
+      bottom with every beat it found marked in red. You can see the raw signal sits
+      around &minus;0.35 mV and drifts, and after filtering it's centered on zero.</figcaption>
     </figure>
 
     <div class="cols">
       <div class="prose">
-        <p>A Python tool that reads clinical ECG recordings from the PhysioNet MIT-BIH
-        Arrhythmia Database and reports heart rate. Record 100 is sampled at
-        360&nbsp;Hz and arrives with the artifacts real recordings have &mdash; baseline
-        wander from breathing, mains hum, movement noise. The raw trace in the upper
-        panel sits well below zero and drifts as it goes.</p>
+        <p>A Python script that pulls real ECG recordings from the PhysioNet MIT-BIH
+        database and calculates heart rate from them. I used record 100, which is
+        sampled at 360 Hz. Real recordings are messy &mdash; there's baseline drift from
+        the person breathing, 60 Hz hum, and noise from movement. You can see all of
+        that in the top plot.</p>
 
-        <p>The first stage is a <strong>4th-order Butterworth bandpass</strong> from
-        0.5 to 50&nbsp;Hz, applied with <code>filtfilt</code> rather than a single
-        forward pass. Filtering forward and then backward cancels the phase shift,
-        which matters here: a phase-shifted filter moves the peaks, and the peak
-        positions are what the measurement depends on.</p>
+        <p>First I run a <strong>4th-order Butterworth bandpass</strong> from 0.5 to
+        50 Hz. I used <code>filtfilt</code> instead of a regular filter because it runs
+        the signal forward and then backward, which cancels out the phase shift. That
+        matters here specifically: a normal filter shifts where the peaks land, and the
+        whole measurement depends on peak timing.</p>
 
-        <p>Peaks are then found on amplitude with a <strong>minimum spacing of 100
-        samples</strong> &mdash; 278&nbsp;ms at this rate, so a single beat's QRS
-        complex cannot register twice and the detector tops out around 216&nbsp;bpm,
-        safely above any real heart rate. Averaging the intervals between consecutive
-        peaks across the full recording gives <strong>75.5&nbsp;bpm</strong>. The plot
-        shows the first ten seconds; the rate is computed over the whole record.</p>
+        <p>Then I find the R-peaks by amplitude, with a <strong>minimum spacing of 100
+        samples</strong> between them. At 360 Hz that's 278 ms, which stops one beat
+        from getting counted twice. It also caps what the script can detect at around
+        216 bpm, but no real heart rate goes that high so it doesn't matter. Averaging
+        the gaps between peaks across the whole recording gives
+        <strong>75.5 bpm</strong>. The plot only shows the first 10 seconds but the
+        number uses all of it.</p>
       </div>
 
       <div class="specs">
@@ -520,63 +522,9 @@ a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-off
     </div>
   </article>
 
-  <!-- ===== 3. Prosthetic finger ===== -->
-  <article class="entry">
-    <p class="eyebrow">Digital fabrication &middot; Assistive devices</p>
-    <h2>3D-printed prosthetic fingertip</h2>
-
-    <figure>
-      <img src="img/cad.jpg" width="1600" height="985"
-           alt="Fusion 360 viewport showing the Raptor 2.0 prosthetic fingertip mesh on a
-                millimetre grid, with the hinge bore and tendon channel visible.">
-      <figcaption>Model inspected in Fusion 360 before export. Units in millimetres;
-      hinge bore and tendon channel checked for clearance.</figcaption>
-    </figure>
-
-    <div class="cols">
-      <div class="prose">
-        <p>A fingertip segment from the <strong>e-NABLE Raptor 2.0</strong> open-source
-        prosthetic hand, taken from published model files through to a working printed
-        part. The e-NABLE project distributes designs for volunteers to print and
-        assemble for recipients who need them, so the engineering sits in preparing the
-        model correctly and producing a part that actually articulates.</p>
-
-        <p>I loaded the mesh in Fusion 360 to check wall thickness, hinge-bore diameter
-        and the tendon channel before committing to a print &mdash; clearances that
-        decide whether the joint moves freely or seizes. After printing in PLA I removed
-        support material, cleared the bore and channel by hand, and dressed the edges
-        until the segment pivoted without binding.</p>
-      </div>
-
-      <div class="specs">
-        <dl>
-          <dt>Source model</dt>
-          <dd>e-NABLE Raptor 2.0<br>(open source)</dd>
-          <dt>My contribution</dt>
-          <dd>Model inspection,<br>print preparation,<br>fabrication, finishing</dd>
-          <dt>Material</dt>
-          <dd>PLA, FDM</dd>
-          <dt>Units</dt>
-          <dd>Millimetre, grams</dd>
-          <dt>Finishing</dt>
-          <dd>Support removal,<br>bore clearing, edge work</dd>
-        </dl>
-      </div>
-    </div>
-
-    <figure style="margin-top:2.25rem">
-      <img src="img/finger.jpg" width="687" height="1200"
-           style="max-width:19rem"
-           alt="The finished black PLA fingertip held in hand, showing the forked hinge
-                end and the tendon slot.">
-      <figcaption>Finished part. Forked end is the hinge joint that pins to the
-      next segment.</figcaption>
-    </figure>
-  </article>
-
   <footer class="foot">
-    <p>Built and documented by Hafiz Rahman. Further work in progress: a
-    reflectance pulse oximeter and an integrated wearable vital-signs monitor.</p>
+    <p>Currently working on a pulse oximeter using a MAX30102, which I'll add here
+    once I have readings I can check against a real one.</p>
   </footer>
 
 </div>
