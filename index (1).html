@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Hafiz Rahman — BME junior at CUNY. Cell-density research on IL-6 signaling, a beacon-homing delivery robot on ESP32, an ECG heart-rate analyzer in Python, and an FEA study of a titanium bone plate.">
+<meta property="og:title" content="Hafiz Rahman — Build Log">
+<meta property="og:description" content="Biomedical research, embedded hardware, signal processing, and mechanical analysis projects.">
+<meta property="og:type" content="website">
+<style>
+:root{color-scheme:light; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0; font:14px system-ui, -apple-system, sans-serif; background:#fafaf9}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Hafiz Rahman — Build Log</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+/* Layout: lab-notebook entries — full-width figure, mono spec rail beside the prose */
+:root{
+  --bg:#f2f5f7; --surface:#ffffff; --fg:#111a20; --muted:#5b6b76;
+  --line:#dce3e8; --accent:#0e5c74; --signal:#00909f; --grid:#e6ebef;
+  color-scheme:light;
+  --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --body:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1115; --surface:#131c22; --fg:#e6eef3; --muted:#8c9ca7;
+  --line:#222e37; --accent:#4ec4da; --signal:#2fd0de; --grid:#1b252c;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0b1115; --surface:#131c22; --fg:#e6eef3; --muted:#8c9ca7;
+  --line:#222e37; --accent:#4ec4da; --signal:#2fd0de; --grid:#1b252c;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:var(--body); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:62rem; margin:0 auto; padding-inline:20px; padding-block:0}
+
+/* ---------- masthead ---------- */
+.mast{padding-block:4.5rem 2.25rem; border-bottom:2px solid var(--fg)}
+.mast h1{
+  font-family:var(--display); font-weight:700; font-size:clamp(2.4rem,7vw,4.1rem);
+  line-height:1.02; letter-spacing:-.025em; margin:0 0 1.1rem;
+  text-wrap:balance;
+}
+.mast .role{
+  font-family:var(--mono); font-size:.78rem; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--accent); margin:0 0 1.75rem;
+}
+.lede{font-size:1.07rem; max-width:34em; color:var(--fg); margin:0 0 2rem}
+.contact{
+  display:flex; flex-wrap:wrap; gap:.4rem 1.6rem;
+  font-family:var(--mono); font-size:.82rem; margin:0; padding:0; list-style:none;
+}
+.contact span{color:var(--muted); display:block; font-size:.68rem;
+  letter-spacing:.1em; text-transform:uppercase; margin-bottom:.15rem}
+.contact a{color:var(--fg); text-decoration:none; border-bottom:1px solid var(--accent)}
+.contact a:hover{color:var(--accent)}
+.contact code{font-family:var(--mono); font-size:.82rem}
+
+/* ---------- project entries ---------- */
+.entry{padding-block:3.5rem; border-bottom:1px solid var(--line)}
+.entry:last-of-type{border-bottom:none}
+.eyebrow{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--signal); margin:0 0 .7rem;
+}
+.entry h2{
+  font-family:var(--display); font-weight:600; font-size:clamp(1.5rem,3.6vw,2.1rem);
+  line-height:1.14; letter-spacing:-.018em; margin:0 0 1.5rem; text-wrap:balance;
+}
+figure{margin:0 0 1.75rem}
+figure img{
+  display:block; width:100%; max-width:100%; height:auto;
+  border:1px solid var(--line); background:var(--surface);
+}
+figcaption{
+  font-family:var(--mono); font-size:.74rem; color:var(--muted);
+  margin-top:.6rem; line-height:1.5;
+}
+.cols{display:grid; grid-template-columns:1fr 15rem; gap:2.5rem; align-items:start}
+@media (max-width:720px){.cols{grid-template-columns:1fr; gap:1.75rem}}
+.prose{min-width:0}
+.prose p{margin:0 0 1rem; max-width:34em}
+.prose p:last-child{margin-bottom:0}
+.prose strong{font-weight:500; color:var(--accent)}
+.prose code{font-family:var(--mono); font-size:.88em; background:var(--surface);
+  border:1px solid var(--line); padding:.08em .32em}
+
+.specs{min-width:0; border-top:2px solid var(--fg); padding-top:.9rem}
+.specs dl{margin:0; font-family:var(--mono); font-size:.78rem}
+.specs dt{
+  color:var(--muted); font-size:.67rem; letter-spacing:.1em;
+  text-transform:uppercase; margin-top:.85rem;
+}
+.specs dt:first-child{margin-top:0}
+.specs dd{margin:.2rem 0 0; color:var(--fg); font-variant-numeric:tabular-nums}
+.repo{
+  display:inline-block; margin-top:1.4rem; font-family:var(--mono);
+  font-size:.78rem; color:var(--fg); text-decoration:none;
+  border-bottom:1px solid var(--accent); padding-bottom:1px;
+}
+.repo:hover{color:var(--accent)}
+
+/* ---------- ecg figure ---------- */
+.scope{
+  background:var(--surface); border:1px solid var(--line);
+  padding:1.1rem 1.1rem .8rem;
+}
+.scope svg{display:block; width:100%; height:auto}
+.readout{
+  display:flex; flex-wrap:wrap; gap:.3rem 2rem; margin:.9rem 0 0;
+  font-family:var(--mono); font-size:.78rem; font-variant-numeric:tabular-nums;
+}
+.readout div span{
+  display:block; font-size:.66rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:.1rem;
+}
+.readout b{font-weight:500; color:var(--accent); font-size:.95rem}
+
+/* ---------- wiring table ---------- */
+.tablewrap{overflow-x:auto; border:1px solid var(--line); background:var(--surface)}
+table.wiring{
+  border-collapse:collapse; width:100%; min-width:26rem;
+  font-family:var(--mono); font-size:.8rem; font-variant-numeric:tabular-nums;
+}
+table.wiring caption{
+  caption-side:top; text-align:left; padding:.95rem 1.1rem .7rem;
+  font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+}
+table.wiring th,table.wiring td{
+  padding:.52rem 1.1rem; text-align:left; border-top:1px solid var(--line);
+}
+table.wiring thead th{
+  border-top:1px solid var(--line); border-bottom:1px solid var(--fg);
+  font-weight:500; color:var(--fg); white-space:nowrap;
+}
+table.wiring tbody th{font-weight:400; color:var(--muted); white-space:nowrap}
+table.wiring tbody td{color:var(--fg)}
+table.wiring td.addr{color:var(--signal)}
+table.wiring tbody tr:last-child th,table.wiring tbody tr:last-child td{
+  border-top:1px solid var(--fg);
+}
+
+/* ---------- paired figures ---------- */
+.pair{
+  display:grid; grid-template-columns:1fr 1fr; gap:1.75rem;
+  align-items:start; margin-top:2.5rem;
+}
+@media (max-width:720px){.pair{grid-template-columns:1fr; gap:2rem}}
+.pair figure{margin:0; min-width:0}
+.pair img{width:100%; height:auto; aspect-ratio:4/3; object-fit:cover}
+
+/* ---------- status pill ---------- */
+.status{
+  display:inline-block; font-family:var(--mono); font-size:.66rem;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--signal);
+  border:1px solid var(--signal); border-radius:2px;
+  padding:.18rem .5rem; margin-left:.6rem; vertical-align:.18em;
+  white-space:nowrap;
+}
+
+/* ---------- in-progress ---------- */
+.wip{padding-block:3.5rem 1rem; border-top:2px solid var(--fg)}
+.wip-head{
+  font-family:var(--mono); font-weight:500; font-size:.78rem;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  margin:0 0 .6rem;
+}
+.wip-note{
+  font-size:.92rem; color:var(--muted); max-width:34em; margin:0 0 2.5rem;
+}
+.wip-item{
+  padding:1.9rem 0 0; margin-bottom:2.75rem;
+  border-top:1px solid var(--line);
+}
+.wip-item:last-child{margin-bottom:1.5rem}
+.wip-item h3{
+  font-family:var(--display); font-weight:600; font-size:clamp(1.25rem,2.9vw,1.6rem);
+  line-height:1.16; letter-spacing:-.015em; margin:0 0 1.35rem; text-wrap:balance;
+}
+
+/* ---------- footer ---------- */
+.foot{
+  padding-block:2.5rem 4rem; border-top:2px solid var(--fg);
+  font-family:var(--mono); font-size:.76rem; color:var(--muted);
+}
+.foot p{margin:0 0 .4rem; max-width:40em}
+a:focus-visible,.repo:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="role">Biomedical Engineering &middot; CUNY</p>
+    <h1>Hafiz Rahman</h1>
+    <p class="lede">I'm a biomedical engineering junior at CUNY, graduating in 2028.
+    Right now I'm in Dr. Pamela del Valle's lab looking at how cell density affects
+    IL-6 signaling in a melanoma line. Outside the lab I build embedded hardware and
+    write signal processing code. Everything here is work I did and debugged myself,
+    with the code and the actual results included.</p>
+    <p class="lede" style="font-size:.95rem; color:var(--muted); margin-bottom:1.75rem">
+    Looking for a summer R&amp;D internship in medical devices. This page is a work in
+    progress &mdash; I add projects as I finish them.</p>
+    <ul class="contact">
+      <li><span>Email</span><code>md.rahman555@login.cuny.edu</code></li>
+      <li><span>GitHub</span><a href="https://github.com/hafizcoding">github.com/hafizcoding</a></li>
+    </ul>
+  </header>
+
+  <!-- ===== Current research ===== -->
+  <article class="entry">
+    <p class="eyebrow">Cell culture &middot; Protein assays</p>
+    <h2>How cell density changes IL-6 signaling<span class="status">Ongoing</span></h2>
+
+    <div class="cols">
+      <div class="prose">
+        <p>I've been working in Dr. Pamela del Valle's lab since this past summer on a
+        question that sounds simple: <strong>do crowded cancer cells make different
+        things than spread-out ones?</strong> Specifically we're looking at
+        interleukin-6 and its receptor in a mouse melanoma line (YUMM1.7). IL-6
+        signaling is tied to tumor growth and spread, and there isn't much published on
+        how confluency alone affects it in these cells.</p>
+
+        <p>The reason I think this matters: in tissue engineering we design environments
+        to mimic what happens in the body. If something as basic as how crowded a dish
+        is changes what the cells produce, that changes how you read every model built
+        on it. IL-6 is also a biomarker doctors track in cancer and inflammation, so
+        it's not only an in vitro question.</p>
+
+        <p>We built the project from scratch. There was no shelf of ready-made reagents
+        &mdash; we made our own buffers from recipes, including the lysis and running
+        buffers for Westerns, which meant doing the calculations, weighing everything
+        out, and checking pH before we could run anything. Slower than opening a kit,
+        but I know what's in every tube and why.</p>
+
+        <p>It also didn't start the way we planned. The melanoma cells took weeks longer
+        to arrive than expected, so we practiced on HEK 293T cells borrowed from another
+        lab. That turned out to help &mdash; I got the basics down before they counted.</p>
+
+        <p>The thing I learned the most from was a bad standard curve.
+        <strong>My first Bradford curve wasn't a straight line.</strong> Working out why
+        taught me more than a clean one would have, and it's the same idea as
+        calibrating any instrument: if the calibration is off, every number after it is
+        off too. I spent similar time figuring out which reducing agent to use in our
+        sample buffer for probing IL-6R, which showed me how many small decisions sit
+        behind one experiment.</p>
+
+        <p>No results yet. We're running through the end of the fall semester, and the
+        next step is comparing IL-6 secretion and IL-6R expression at 60% versus 100%
+        confluency by ELISA and Western blot. I'll put the data here when we have it.</p>
+      </div>
+
+      <div class="specs">
+        <dl>
+          <dt>Lab</dt>
+          <dd>Dr. Pamela del Valle</dd>
+          <dt>Question</dt>
+          <dd>Does confluency change<br>IL-6 / IL-6R in vitro?</dd>
+          <dt>Cells</dt>
+          <dd>YUMM1.7 mouse melanoma<br>HEK 293T for practice</dd>
+          <dt>Techniques</dt>
+          <dd>Sterile cell culture,<br>passaging, lysis,<br>Bradford assay,<br>Western blot prep</dd>
+          <dt>Reagents</dt>
+          <dd>Buffers made from<br>recipe, not kits</dd>
+          <dt>Next</dt>
+          <dd>ELISA + Western at<br>60% vs 100%</dd>
+          <dt>Status</dt>
+          <dd>Running through<br>fall semester</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="pair" style="margin-top:2.5rem">
+      <figure>
+        <img src="img/lab_plan.jpg" width="1409" height="1600"
+             alt="A lab whiteboard showing the experimental design: two dishes labelled
+                  60 percent and about 100 percent confluency, an arrow to a tube with
+                  lysis buffer, and a week schedule reading Monday plate, Tuesday change
+                  media, Wednesday passage at 1 to 20 for 60 percent and 1 to 10 for 100
+                  percent, Thursday lyse, Bradford, sample prep.">
+        <figcaption>The plan on the board. Two confluency conditions, and the passage
+        ratios that get us there &mdash; 1:20 for ~60%, 1:10 for ~100% &mdash; then lyse
+        and run a Bradford before prepping samples.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/lab_bsc.jpg" width="1500" height="1138"
+             alt="Working in a biosafety cabinet in a lab coat and gloves, pipetting
+                  media into culture dishes.">
+        <figcaption>Changing media in the biosafety cabinet. Most of the summer was
+        learning to do this part without contaminating anything.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <!-- ===== 1. BLACKBIRD delivery robot ===== -->
+  <article class="entry">
+    <p class="eyebrow">Embedded systems &middot; Controls &middot; Mechanical design</p>
+    <h2>BLACKBIRD &mdash; beacon-homing delivery robot</h2>
+
+    <figure>
+      <img src="img/bot.jpg" width="1600" height="1232"
+           alt="Four-wheeled robot on a blue 3D-printed chassis with an HC-SR04 ultrasonic
+                sensor mounted at the front, an ESP32 board, breadboard and 9V battery.">
+      <figcaption>The finished robot. I printed the chassis in PLA and sized the
+      sensor bracket and motor mounts around the parts I actually had.</figcaption>
+    </figure>
+
+    <div class="cols">
+      <div class="prose">
+        <p>I built this for the CIPASS summer engineering internship. It's a robot that
+        <strong>drives toward a person instead of following a set path</strong>. You put
+        your phone in BLE advertising mode with the name <code>TARGET</code>, and the
+        robot scans for it, reads how strong the signal is, estimates how far away that
+        puts you, and drives that way. If something gets within 15 cm an ultrasonic
+        sensor stops it and it goes around. Once it gets close enough, a servo opens a
+        hatch and drops whatever it's carrying.</p>
+
+        <p>I did the chassis in Onshape, wired and debugged the circuit, and wrote all
+        the firmware.</p>
+
+        <p>I started on an Arduino Uno because that's what came in my kit. The problem
+        is the Uno has no radio at all, so there was no way to do the phone part.
+        I ended up <strong>switching the whole thing to an ESP32</strong>, which has
+        Bluetooth built in. That took longer than the actual project. I kept getting
+        upload and boot-mode errors, my USB-C adapter kept dropping out mid-upload, and
+        I eventually killed one of the boards.</p>
+
+        <p>The two things that actually taught me something were both power problems.
+        Running four motors and the ESP32 off one 9 V battery caused
+        <strong>brownouts</strong> — the motors were slow, stuff got hot, and the board
+        would reset partway through a run. I fixed it by giving the motor driver its own
+        battery and powering the ESP32 separately. The other one was my fault: I wired
+        the ultrasonic sensor's VCC to the 9 V rail and shorted it. It runs on 3.3 V.
+        I replaced the sensor and moved the wire.</p>
+      </div>
+
+      <div class="specs">
+        <dl>
+          <dt>Controller</dt>
+          <dd>ESP32 (BLE + Wi-Fi)<br>migrated from Uno</dd>
+          <dt>Homing</dt>
+          <dd>BLE RSSI, log-distance<br>path-loss model</dd>
+          <dt>Obstacles</dt>
+          <dd>HC-SR04, 15&nbsp;cm stop<br>sensor VCC on 3V3</dd>
+          <dt>Drive</dt>
+          <dd>4&times; TT gear motors<br>L298N, 2 channels</dd>
+          <dt>Payload</dt>
+          <dd>SG90 servo hatch</dd>
+          <dt>Power</dt>
+          <dd>9&nbsp;V to driver,<br>separate 5&nbsp;V to ESP32</dd>
+          <dt>Fallback</dt>
+          <dd>Bluetooth serial<br>manual override</dd>
+          <dt>Tools</dt>
+          <dd>Onshape, C++/Arduino</dd>
+        </dl>
+        <a class="repo" href="https://github.com/hafizcoding/delivery-bot">View repository &rarr;</a>
+      </div>
+    </div>
+
+    <!-- state machine -->
+    <figure style="margin-top:2.5rem">
+      <div class="scope">
+        <svg viewBox="-70 0 810 250" role="img"
+             aria-label="State diagram with four states. HOMING rotates in place when no
+                         beacon is visible, diverts to OBSTACLE AVOID when something is
+                         within 15 centimetres, and advances to TARGET REACHED after five
+                         consecutive readings under 0.5 metres. TARGET REACHED leads to
+                         DROPPING, which returns to HOMING after ten seconds.">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/>
+            </marker>
+          </defs>
+          <g font-family="IBM Plex Mono, monospace" font-size="12.5">
+
+            <!-- OBSTACLE_AVOID -->
+            <rect x="40" y="22" width="232" height="50" rx="2"
+                  fill="none" stroke="var(--muted)" stroke-width="1.5"
+                  stroke-dasharray="5 3"/>
+            <text x="156" y="44" text-anchor="middle" fill="var(--fg)">OBSTACLE_AVOID</text>
+            <text x="156" y="61" text-anchor="middle" fill="var(--muted)"
+                  font-size="10.5">reverse, pivot right</text>
+
+            <!-- HOMING -->
+            <rect x="40" y="112" width="160" height="50" rx="2"
+                  fill="none" stroke="var(--accent)" stroke-width="2"/>
+            <text x="120" y="134" text-anchor="middle" fill="var(--fg)">HOMING</text>
+            <text x="120" y="151" text-anchor="middle" fill="var(--muted)"
+                  font-size="10.5">drive toward beacon</text>
+
+            <!-- TARGET_REACHED -->
+            <rect x="302" y="112" width="178" height="50" rx="2"
+                  fill="none" stroke="var(--fg)" stroke-width="1.5"/>
+            <text x="391" y="134" text-anchor="middle" fill="var(--fg)">TARGET_REACHED</text>
+            <text x="391" y="151" text-anchor="middle" fill="var(--muted)"
+                  font-size="10.5">stop</text>
+
+            <!-- DROPPING -->
+            <rect x="562" y="112" width="138" height="50" rx="2"
+                  fill="none" stroke="var(--signal)" stroke-width="2"/>
+            <text x="631" y="134" text-anchor="middle" fill="var(--fg)">DROPPING</text>
+            <text x="631" y="151" text-anchor="middle" fill="var(--muted)"
+                  font-size="10.5">servo releases</text>
+
+            <g stroke="var(--muted)" stroke-width="1.4" fill="none" marker-end="url(#ar)">
+              <!-- homing -> obstacle -->
+              <path d="M78 112 V72"/>
+              <!-- obstacle -> homing -->
+              <path d="M162 72 V112"/>
+              <!-- homing -> target -->
+              <path d="M200 137 H302"/>
+              <!-- target -> dropping -->
+              <path d="M480 137 H562"/>
+              <!-- dropping -> homing -->
+              <path d="M631 162 V212 H120 V162"/>
+              <!-- search self-loop -->
+              <path d="M40 124 C8 124 8 150 40 150"/>
+            </g>
+
+            <g font-size="10.5" fill="var(--muted)">
+              <text x="70" y="96" text-anchor="end">obstacle</text>
+              <text x="70" y="108" text-anchor="end">&lt; 15 cm</text>
+              <text x="172" y="102">clear</text>
+              <text x="251" y="128" text-anchor="middle" fill="var(--accent)">5 hits &lt; 0.5 m</text>
+              <text x="375" y="228" text-anchor="middle">after 10 s, resume homing</text>
+              <text x="24" y="176" text-anchor="middle">no beacon &rarr; rotate</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <figcaption>How the firmware is structured. One thing I had to figure out: the
+      servo twitches the whole time it's attached, so I detach it while the robot is
+      driving and only re-attach it at the end to open the hatch.</figcaption>
+    </figure>
+
+    <!-- RSSI model chart -->
+    <figure style="margin-top:2.5rem">
+      <div class="scope">
+        <svg viewBox="0 0 740 290" role="img"
+             aria-label="Chart of estimated range against Bluetooth signal strength,
+                         from minus 82 to minus 40 dBm. The curve falls steeply as the
+                         signal strengthens. The working arrival threshold of 0.5 metres
+                         sits at minus 58 dBm; the earlier 0.3 metre threshold required
+                         minus 53 dBm.">
+          <g font-family="IBM Plex Mono, monospace" font-size="10.5">
+
+            <!-- grid -->
+            <g stroke="var(--grid)" stroke-width="1">
+              <line x1="72" y1="28" x2="72" y2="236"/>
+              <line x1="101.9" y1="28" x2="101.9" y2="236"/>
+              <line x1="251.4" y1="28" x2="251.4" y2="236"/>
+              <line x1="401" y1="28" x2="401" y2="236"/>
+              <line x1="550.5" y1="28" x2="550.5" y2="236"/>
+              <line x1="700" y1="28" x2="700" y2="236"/>
+              <line x1="72" y1="28" x2="700" y2="28"/>
+              <line x1="72" y1="69.6" x2="700" y2="69.6"/>
+              <line x1="72" y1="111.2" x2="700" y2="111.2"/>
+              <line x1="72" y1="152.8" x2="700" y2="152.8"/>
+              <line x1="72" y1="194.4" x2="700" y2="194.4"/>
+            </g>
+            <!-- axes -->
+            <g stroke="var(--muted)" stroke-width="1.2">
+              <line x1="72" y1="236" x2="700" y2="236"/>
+              <line x1="72" y1="28" x2="72" y2="236"/>
+            </g>
+
+            <!-- y ticks -->
+            <g fill="var(--muted)" text-anchor="end">
+              <text x="64" y="240">0</text>
+              <text x="64" y="198">1</text>
+              <text x="64" y="157">2</text>
+              <text x="64" y="115">3</text>
+              <text x="64" y="74">4</text>
+              <text x="64" y="32">5</text>
+            </g>
+            <!-- x ticks -->
+            <g fill="var(--muted)" text-anchor="middle">
+              <text x="101.9" y="252">&minus;80</text>
+              <text x="251.4" y="252">&minus;70</text>
+              <text x="401" y="252">&minus;60</text>
+              <text x="550.5" y="252">&minus;50</text>
+              <text x="700" y="252">&minus;40</text>
+            </g>
+            <!-- axis titles -->
+            <text x="386" y="275" text-anchor="middle" fill="var(--muted)">
+              Advertised signal strength (dBm) &mdash; stronger to the right
+            </text>
+            <text x="20" y="132" fill="var(--muted)" text-anchor="middle"
+                  transform="rotate(-90 20 132)">Estimated range (m)</text>
+
+            <!-- curve -->
+            <path d="M98.2 30.8 L101.9 36.1 L105.6 41.2 L109.4 46.2 L113.1 51.1 L116.9 55.9 L120.6 60.6 L124.3 65.1 L128.1 69.5 L131.8 73.8 L135.5 78.0 L139.3 82.1 L143.0 86.1 L146.8 89.9 L150.5 93.7 L154.2 97.4 L158.0 101.0 L161.7 104.4 L165.5 107.8 L169.2 111.2 L172.9 114.4 L176.7 117.5 L180.4 120.6 L184.1 123.6 L187.9 126.5 L191.6 129.3 L195.4 132.1 L199.1 134.7 L202.8 137.4 L206.6 139.9 L210.3 142.4 L214.0 144.8 L217.8 147.2 L221.5 149.4 L225.3 151.7 L229.0 153.9 L232.7 156.0 L236.5 158.0 L240.2 160.1 L244.0 162.0 L247.7 163.9 L251.4 165.8 L255.2 167.6 L258.9 169.4 L262.6 171.1 L266.4 172.8 L270.1 174.4 L273.9 176.0 L277.6 177.5 L281.3 179.1 L285.1 180.5 L288.8 182.0 L292.5 183.4 L296.3 184.7 L300.0 186.0 L303.8 187.3 L307.5 188.6 L311.2 189.8 L315.0 191.0 L318.7 192.2 L322.5 193.3 L326.2 194.4 L329.9 195.5 L333.7 196.5 L337.4 197.5 L341.1 198.5 L344.9 199.5 L348.6 200.4 L352.4 201.4 L356.1 202.3 L359.8 203.1 L363.6 204.0 L367.3 204.8 L371.0 205.6 L374.8 206.4 L378.5 207.2 L382.3 207.9 L386.0 208.6 L389.7 209.3 L393.5 210.0 L397.2 210.7 L401.0 211.3 L404.7 212.0 L408.4 212.6 L412.2 213.2 L415.9 213.8 L419.6 214.4 L423.4 214.9 L427.1 215.5 L430.9 216.0 L434.6 216.5 L438.3 217.0 L442.1 217.5 L445.8 218.0 L449.5 218.5 L453.3 218.9 L457.0 219.4 L460.8 219.8 L464.5 220.2 L468.2 220.6 L472.0 221.0 L475.7 221.4 L479.5 221.8 L483.2 222.1 L486.9 222.5 L490.7 222.8 L494.4 223.2 L498.1 223.5 L501.9 223.8 L505.6 224.2 L509.4 224.5 L513.1 224.8 L516.8 225.0 L520.6 225.3 L524.3 225.6 L528.0 225.9 L531.8 226.1 L535.5 226.4 L539.3 226.6 L543.0 226.9 L546.7 227.1 L550.5 227.3 L554.2 227.6 L558.0 227.8 L561.7 228.0 L565.4 228.2 L569.2 228.4 L572.9 228.6 L576.6 228.8 L580.4 229.0 L584.1 229.2 L587.9 229.3 L591.6 229.5 L595.3 229.7 L599.1 229.8 L602.8 230.0 L606.5 230.2 L610.3 230.3 L614.0 230.5 L617.8 230.6 L621.5 230.7 L625.2 230.9 L629.0 231.0 L632.7 231.1 L636.5 231.3 L640.2 231.4 L643.9 231.5 L647.7 231.6 L651.4 231.7 L655.1 231.8 L658.9 231.9 L662.6 232.1 L666.4 232.2 L670.1 232.3 L673.8 232.4 L677.6 232.4 L681.3 232.5 L685.0 232.6 L688.8 232.7 L692.5 232.8 L696.3 232.9 L700.0 233.0" fill="none" stroke="var(--signal)" stroke-width="2"
+                  stroke-linejoin="round" stroke-linecap="round"/>
+
+            <!-- threshold markers -->
+            <g stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3">
+              <line x1="72" y1="215.2" x2="425.2" y2="215.2"/>
+              <line x1="425.2" y1="215.2" x2="425.2" y2="236"/>
+            </g>
+            <circle cx="425.2" cy="215.2" r="4.5" fill="var(--accent)"
+                    stroke="var(--surface)" stroke-width="2"/>
+            <circle cx="498.2" cy="223.5" r="4" fill="none"
+                    stroke="var(--muted)" stroke-width="1.6"/>
+
+            <!-- leader lines to annotation -->
+            <g stroke="var(--muted)" stroke-width="1" fill="none">
+              <path d="M429 212 L468 152"/>
+              <path d="M502 220 L536 202"/>
+            </g>
+            <g font-size="11">
+              <text x="472" y="130" fill="var(--accent)">Shipped: 0.5 m, 5 hits</text>
+              <text x="472" y="144" fill="var(--muted)" font-size="10">needs &minus;58 dBm sustained</text>
+              <text x="542" y="196" fill="var(--muted)">First try: 0.3 m, 15 hits</text>
+              <text x="542" y="209" fill="var(--muted)" font-size="10">needs &minus;53 dBm &mdash; never held</text>
+            </g>
+          </g>
+        </svg>
+        <div class="readout">
+          <div><span>Reference</span><b>&minus;65 dBm @ 1 m</b></div>
+          <div><span>Path-loss exponent</span><b>2.2</b></div>
+          <div><span>Arrival</span><b>5 &times; &lt; 0.5 m</b></div>
+          <div><span>Speed</span><b>160&ndash;255 PWM</b></div>
+        </div>
+      </div>
+      <figcaption>This is the curve my firmware uses to turn signal strength into a
+      distance guess, plotted from the constants in my code. My first version wanted 15
+      readings in a row under 0.3 m before it would say it arrived. It basically never
+      triggered, because the signal jumps around by several dB between reads. Dropping
+      it to 5 readings under 0.5 m made it work every time. The robot also slows down as
+      the number gets smaller so it doesn't overshoot.</figcaption>
+    </figure>
+
+    <!-- process shot -->
+    <div class="pair">
+      <figure>
+        <img src="img/proto_photo.jpg" width="1468" height="1469"
+             alt="The robot's electronics on a black foam board prototype: an ELEGOO
+                  Arduino Uno R3, an L298N motor driver, an HC-SR04 ultrasonic sensor,
+                  four wheels on TT gear motors, and jumper wiring.">
+        <figcaption>The earlier Arduino Uno version on foam board. I wanted the circuit
+        working before I designed any geometry, so I only had to print the deck once.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/proto_cad.jpg" width="1419" height="770"
+             alt="The chassis modelled in Onshape: a flat deck with two raised blocks
+                  for the electronics and four L-shaped motor mounts underneath.">
+        <figcaption>The chassis in Onshape. Flat deck for the electronics, and the
+        L-brackets underneath are where the four gear motors sit.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <!-- ===== 2. ECG analyzer ===== -->
+  <article class="entry">
+    <p class="eyebrow">Biosignal processing</p>
+    <h2>ECG heart-rate analyzer</h2>
+
+    <figure>
+      <img src="img/ecg.jpg" width="1700" height="971"
+           alt="Two stacked plots. Top: the raw ECG signal over the first ten seconds,
+                showing baseline drift around minus 0.35 millivolts. Bottom: the same
+                signal after bandpass filtering, centred on zero, with thirteen detected
+                R-peaks marked in red and the heart rate given as 75.5 bpm.">
+      <figcaption>What the script outputs. Raw signal on top, filtered signal on the
+      bottom with every beat it found marked in red. You can see the raw signal sits
+      around &minus;0.35 mV and drifts, and after filtering it's centered on zero.</figcaption>
+    </figure>
+
+    <div class="cols">
+      <div class="prose">
+        <p>A Python script that pulls real ECG recordings from the PhysioNet MIT-BIH
+        database and calculates heart rate from them. I used record 100, which is
+        sampled at 360 Hz. Real recordings are messy &mdash; there's baseline drift from
+        the person breathing, 60 Hz hum, and noise from movement. You can see all of
+        that in the top plot.</p>
+
+        <p>First I run a <strong>4th-order Butterworth bandpass</strong> from 0.5 to
+        50 Hz. I used <code>filtfilt</code> instead of a regular filter because it runs
+        the signal forward and then backward, which cancels out the phase shift. That
+        matters here specifically: a normal filter shifts where the peaks land, and the
+        whole measurement depends on peak timing.</p>
+
+        <p>Then I find the R-peaks by amplitude, with a <strong>minimum spacing of 100
+        samples</strong> between them. At 360 Hz that's 278 ms, which stops one beat
+        from getting counted twice. It also caps what the script can detect at around
+        216 bpm, but no real heart rate goes that high so it doesn't matter. Averaging
+        the gaps between peaks across the whole recording gives
+        <strong>75.5 bpm</strong>. The plot only shows the first 10 seconds but the
+        number uses all of it.</p>
+      </div>
+
+      <div class="specs">
+        <dl>
+          <dt>Language</dt>
+          <dd>Python 3.13</dd>
+          <dt>Libraries</dt>
+          <dd>wfdb, SciPy, NumPy,<br>Matplotlib</dd>
+          <dt>Source data</dt>
+          <dd>MIT-BIH record 100<br>360 Hz, channel 0</dd>
+          <dt>Filter</dt>
+          <dd>Butterworth band,<br>order 4, 0.5&ndash;50 Hz<br>zero-phase (filtfilt)</dd>
+          <dt>Detection</dt>
+          <dd>Amplitude &gt; 0.5 mV,<br>278 ms refractory</dd>
+          <dt>Result</dt>
+          <dd>75.5 bpm</dd>
+        </dl>
+        <a class="repo" href="https://github.com/hafizcoding/ecg-analyzer">View repository &rarr;</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== 3. Bone plate FEA ===== -->
+  <article class="entry">
+    <p class="eyebrow">Mechanical design · FEA</p>
+    <h2>Bone plate &mdash; four-point bending FEA</h2>
+
+    <figure>
+      <img src="https://raw.githubusercontent.com/hafizcoding/Bone-plate-fea/main/images/stress-von-mises.png" width="1978" height="1072"
+           alt="Von Mises stress plot of a six-hole titanium bone plate. Most of the
+                plate is blue and green, with small red and orange spots at the top and
+                bottom edges of the two innermost holes. The legend maximum is 143.73 MPa.">
+      <figcaption>Von Mises stress. The red spots are at the edges of the two innermost
+      holes, not in the solid middle of the plate. The holes roughly double the stress
+      compared with the material between them.</figcaption>
+    </figure>
+
+    <div class="cols">
+      <div class="prose">
+        <p>My other projects are electronics and code, so I wanted one that shows I can
+        do mechanical analysis. I modeled a straight 6-hole bone fixation plate in
+        Fusion and simulated the standard bench test for bone plates:
+        <strong>four-point bending, set up after ASTM F382</strong>. My prediction going
+        in was that the highest stress wouldn't be in the solid middle of the plate but
+        at the screw holes nearest the middle, because a hole concentrates stress around
+        its edges.</p>
+
+        <p>The plate is 100 &times; 12 &times; 3.5 mm Ti-6Al-4V, the titanium alloy most
+        plates are made from, with six &Oslash;4.5 mm holes 16 mm apart. I put a 0.5 mm
+        fillet on every hole edge, because a perfectly sharp edge makes FEA report a
+        stress spike that isn't real.</p>
+
+        <p>The test setup needed a fix before it could run. I'd planned an 80 mm support
+        span, which turned out to put the supports at &plusmn;40 mm &mdash;
+        <strong>exactly on the outermost holes</strong>. The plate would have been
+        resting on air. I moved the supports to &plusmn;32 mm and the load points to
+        &plusmn;16 mm so every contact line falls in a gap between holes. Fusion can only
+        apply a load to an edge that exists, so I made those lines by splitting the
+        plate's faces with offset construction planes. One support is pinned in all three
+        directions and the other only vertically, like a roller, so the plate can slide
+        slightly as it bends. Fixing both ends would make it look stiffer than it is.</p>
+
+        <p>The prediction held. <strong>Peak von Mises stress was 143.7 MPa, right at the
+        edges of the two innermost holes</strong>, a factor of safety of 6.1 against
+        yield. The middle sags 0.19 mm and the ends tip up 0.17 mm past the supports.</p>
+
+        <p>I didn't want to just trust the colors, so I checked it by hand. Between the
+        load points the bending moment is constant at 1600 N&middot;mm. Through the
+        narrowest section at a hole that works out to 104 MPa, so the hole is adding a
+        concentration factor of about 1.4. Beam theory for a solid bar the same size
+        predicts 0.15 mm of sag; the FEA gives 0.19 mm, which makes sense because the
+        holes remove material and make the plate more flexible.</p>
+
+        <p>Next I'm rerunning it at 3.0 and 4.0 mm thick to see how stress and stiffness
+        trade off, plus a mesh convergence check at the holes.</p>
+      </div>
+
+      <div class="specs">
+        <dl>
+          <dt>Software</dt>
+          <dd>Autodesk Fusion,<br>Static Stress</dd>
+          <dt>Material</dt>
+          <dd>Ti-6Al-4V<br>yield 882.5 MPa</dd>
+          <dt>Geometry</dt>
+          <dd>100 &times; 12 &times; 3.5 mm<br>6 &times; &Oslash;4.5 holes, 16 mm pitch</dd>
+          <dt>Test</dt>
+          <dd>Four-point bending,<br>after ASTM F382</dd>
+          <dt>Spans</dt>
+          <dd>64 mm support<br>32 mm load</dd>
+          <dt>Load</dt>
+          <dd>2 &times; 100 N</dd>
+          <dt>Mesh</dt>
+          <dd>1% model-based</dd>
+          <dt>Result</dt>
+          <dd>143.7 MPa peak<br>FoS 6.1, 0.19 mm sag</dd>
+        </dl>
+        <a class="repo" href="https://github.com/hafizcoding/Bone-plate-fea">View repository &rarr;</a>
+      </div>
+    </div>
+
+    <figure>
+      <img src="https://raw.githubusercontent.com/hafizcoding/Bone-plate-fea/main/images/displacement-z.png" width="2852" height="1528"
+           alt="Vertical displacement plot of the same plate. The middle is dark blue at
+                minus 0.19 mm and the two rounded ends are red at plus 0.173 mm.">
+      <figcaption>Vertical displacement. The middle sags 0.19 mm while the ends tip up
+      past the supports, like a seesaw.</figcaption>
+    </figure>
+  </article>
+
+  <footer class="foot">
+    <p>Currently working on a pulse oximeter using a MAX30102, which I'll add here
+    once I have readings I can check against a real one.</p>
+  </footer>
+
+</div>
+</body>
+</html>
